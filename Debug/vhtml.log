@@ -1,0 +1,4 @@
+﻿  vhtml.cpp
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.29.30133\include\sal.h(2361,1): error C2144: syntax error: 'int' should be preceded by ';'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.29.30133\include\sal.h(2361,8): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\dev\source\repos\vhtml\vhtml\vhtml.cpp(7,29): warning C4267: '=': conversion from 'size_t' to 'unsigned short', possible loss of data

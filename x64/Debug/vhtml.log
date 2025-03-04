@@ -1,0 +1,4 @@
+﻿  vhtml.cpp
+C:\Users\dev\source\repos\vhtml\vhtml\vhtml.cpp(6,29): warning C4267: '=': conversion from 'size_t' to 'unsigned short', possible loss of data
+C:\Users\dev\source\repos\vhtml\vhtml\vhtml.cpp(36,28): warning C4101: 'e': unreferenced local variable
+  vhtml.vcxproj -> C:\Users\dev\source\repos\vhtml\x64\Debug\vhtml.exe
