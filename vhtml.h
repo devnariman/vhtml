@@ -1,5 +1,4 @@
 #pragma once
-
 #include <curl/curl.h>
 #include <iostream>
 class vhtml
@@ -16,13 +15,10 @@ private:
 	std::string readBuffer;
 	std::string url;
 	short unsigned int size;
-
 	//*******************************
 	//*******************************
 	//*******************************
 	//*******************************
-
-
 	// function : 
 	void vhtml_maping(std::string);
 	void getHTML();

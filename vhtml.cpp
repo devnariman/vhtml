@@ -6,10 +6,7 @@ vhtml::vhtml(std::string url_point, std::string string_point)
     size = readBuffer.size();
 
     if (string_point != "\0") {
-
         vhtml_maping(string_point);
-
-
     }
 
 }
