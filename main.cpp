@@ -22,7 +22,15 @@ int main() {
 	cin.ignore();
 	return 0;
 }
-
+//.
+//.
+//.
+//.
+//.
+//.
+//.
+//.
+//.
 void menu(vhtml& html) {
 	int controler_number;
 	cout << "menu : " << endl;

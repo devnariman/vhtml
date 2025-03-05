@@ -8,7 +8,7 @@ public:
 	void html_size();
 	friend std::ostream& operator <<(std::ostream& out, const vhtml& html);
 	~vhtml();
-private:
+protected:
 	// variable : 
 	CURL* curl = curl_easy_init();
 	CURLcode res;
@@ -20,7 +20,7 @@ private:
 	//*******************************
 	//*******************************
 	// function : 
-	void vhtml_maping(std::string);
+	void vhtml_getElement(std::string);
 	void getHTML();
 	static size_t WriteCallback(void*, size_t, size_t, std::string*);
 };

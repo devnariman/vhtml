@@ -1,4 +1,11 @@
 ﻿#include "vhtml.h"
+
+std::ostream& operator <<(std::ostream& out, const vhtml& html) {
+    std::cout << html.readBuffer << std::endl;
+    return out;
+};
+
+
 vhtml::vhtml(std::string url_point, std::string string_point)
 {
     url = url_point;
@@ -6,36 +13,35 @@ vhtml::vhtml(std::string url_point, std::string string_point)
     size = readBuffer.size();
 
     if (string_point != "\0") {
-        vhtml_maping(string_point);
+        vhtml_getElement(string_point);
     }
 
 }
-void vhtml::vhtml_maping(std::string str_point) {
+
+
+void vhtml::vhtml_getElement(std::string str_point) {
     if (readBuffer.find(str_point) == std::string::npos) {
         std::cout << "It isnt hier !" << std::endl;
     }
     else
     {
-        size_t str_point_start = readBuffer.find(str_point), str_point_end = str_point_start + std::size(str_point);
+        unsigned short int str_point_index = readBuffer.find(str_point);
 
-        for (size_t i = str_point_start; i < str_point_end; i++)
+        for (unsigned int i = str_point_index; i < size; i++)
         {
-            std::cout << readBuffer.at(i) << std::endl;
+            if (readBuffer[i] == '/' && readBuffer[i - 1] == '<') {
+                
+                std::cout << readBuffer.substr(str_point_index, i- str_point_index);
+                break;
+            }
         }
-             
+
 
         //std::cout << "index of str point : " << str_point_start << std::endl;
         //std::cout << "char in this index number : " << readBuffer.at(str_point_start) << std::endl;
         //std::cout << "size : " << size << std::endl;
     }
    
-};
-
-
-
-std::ostream& operator <<(std::ostream& out, const vhtml& html) {
-    std::cout << html.readBuffer << std::endl;
-    return out;
 };
 
 void vhtml::html_size() {
