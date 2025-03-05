@@ -11,7 +11,24 @@ vhtml::vhtml(std::string url_point, std::string string_point)
 
 }
 void vhtml::vhtml_maping(std::string str_point) {
-    std::cout << str_point;
+    if (readBuffer.find(str_point) == std::string::npos) {
+        std::cout << "It isnt hier !" << std::endl;
+    }
+    else
+    {
+        size_t str_point_start = readBuffer.find(str_point), str_point_end = str_point_start + std::size(str_point);
+
+        for (size_t i = str_point_start; i < str_point_end; i++)
+        {
+            std::cout << readBuffer.at(i) << std::endl;
+        }
+             
+
+        //std::cout << "index of str point : " << str_point_start << std::endl;
+        //std::cout << "char in this index number : " << readBuffer.at(str_point_start) << std::endl;
+        //std::cout << "size : " << size << std::endl;
+    }
+   
 };
 
 
