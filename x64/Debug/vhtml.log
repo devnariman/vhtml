@@ -1,5 +1,10 @@
-﻿  vhtml.cpp
+﻿  main.cpp
+  vhtml.cpp
 C:\Users\dev\source\repos\vhtml\vhtml\vhtml.cpp(13,29): warning C4267: '=': conversion from 'size_t' to 'unsigned short', possible loss of data
-C:\Users\dev\source\repos\vhtml\vhtml\vhtml.cpp(28,72): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned short', possible loss of data
-C:\Users\dev\source\repos\vhtml\vhtml\vhtml.cpp(56,28): warning C4101: 'e': unreferenced local variable
+C:\Users\dev\source\repos\vhtml\vhtml\vhtml.cpp(31,78): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned short', possible loss of data
+C:\Users\dev\source\repos\vhtml\vhtml\vhtml.cpp(78,28): warning C4101: 'e': unreferenced local variable
+  Generating Code...
+C:\Users\dev\source\repos\vhtml\vhtml\vhtml.cpp(54): warning C4715: 'vhtml::Get_endTag': not all control paths return a value
+C:\Users\dev\source\repos\vhtml\vhtml\vhtml.cpp(38): warning C4715: 'vhtml::vhtml_getElement': not all control paths return a value
+C:\Users\dev\source\repos\vhtml\vhtml\vhtml.cpp(66): warning C4715: 'vhtml::Get_startTag': not all control paths return a value
   vhtml.vcxproj -> C:\Users\dev\source\repos\vhtml\x64\Debug\vhtml.exe

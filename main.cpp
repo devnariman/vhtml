@@ -14,10 +14,9 @@ int main() {
 	string url;
 	cout << "enter your url : "; cin >> url; cout << endl;
 
-	vhtml html(url, "nariman");
+	vhtml html(url);
 
-
-	//menu(html);
+	menu(html);
 	cin.get();
 	cin.ignore();
 	return 0;
@@ -35,9 +34,10 @@ void menu(vhtml& html) {
 	int controler_number;
 	cout << "menu : " << endl;
 	cout << "1 - show vhtml" << endl;
-	cout << "2 - vhtml size" << endl << endl;
+	cout << "2 - vhtml size" << endl;
+	cout << "3 - search vhtml" << endl;
 	cout << "Enter your controler number : "; cin >> controler_number; cout << endl;
-
+	string a;
 	switch (controler_number)
 	{
 	case 1:
@@ -48,6 +48,10 @@ void menu(vhtml& html) {
 	case 2:
 		clearScreen();
 		cout << "HTML size >>>>>>>> "; html.html_size(); cout << " Byte" << endl;
+		break;
+	case 3:
+		clearScreen();
+		cout << "search in HTML , enter your str :  >>>>>>>> "; cin >> a; cout << endl;cout << html.get_element(a);
 		break;
 	default:
 		cout << "your controler number not declering !" << endl;

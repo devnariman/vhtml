@@ -6,21 +6,25 @@ class vhtml
 public:
 	vhtml(std::string url_point, std::string string_point = "\0");
 	void html_size();
+	std::string get_element(std::string&);
 	friend std::ostream& operator <<(std::ostream& out, const vhtml& html);
 	~vhtml();
-protected:
+private:
 	// variable : 
 	CURL* curl = curl_easy_init();
 	CURLcode res;
 	std::string readBuffer;
 	std::string url;
 	short unsigned int size;
+	std::string found_element;
 	//*******************************
 	//*******************************
 	//*******************************
 	//*******************************
 	// function : 
-	void vhtml_getElement(std::string);
+	std::string vhtml_getElement(std::string&);
+	int Get_endTag(unsigned short int&);
+	int Get_startTag(unsigned short int&);
 	void getHTML();
 	static size_t WriteCallback(void*, size_t, size_t, std::string*);
 };

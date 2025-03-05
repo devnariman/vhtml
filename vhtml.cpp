@@ -13,36 +13,58 @@ vhtml::vhtml(std::string url_point, std::string string_point)
     size = readBuffer.size();
 
     if (string_point != "\0") {
-        vhtml_getElement(string_point);
+        found_element = vhtml_getElement(string_point);
     }
 
 }
+std::string vhtml::get_element(std::string& string_point) {
+    found_element = vhtml_getElement(string_point);
+    return found_element;
+}
 
-
-void vhtml::vhtml_getElement(std::string str_point) {
+std::string vhtml::vhtml_getElement(std::string& str_point) {
     if (readBuffer.find(str_point) == std::string::npos) {
         std::cout << "It isnt hier !" << std::endl;
     }
     else
     {
-        unsigned short int str_point_index = readBuffer.find(str_point);
-
-        for (unsigned int i = str_point_index; i < size; i++)
-        {
-            if (readBuffer[i] == '/' && readBuffer[i - 1] == '<') {
-                
-                std::cout << readBuffer.substr(str_point_index, i- str_point_index);
-                break;
-            }
-        }
-
-
-        //std::cout << "index of str point : " << str_point_start << std::endl;
-        //std::cout << "char in this index number : " << readBuffer.at(str_point_start) << std::endl;
-        //std::cout << "size : " << size << std::endl;
+        unsigned short int str_point_index = this->readBuffer.find(str_point);
+        int end_tag , start_tag;
+        end_tag = Get_endTag(str_point_index);
+        start_tag = Get_startTag(str_point_index);
+        return readBuffer.substr(start_tag, (end_tag - start_tag)+1);
     }
    
 };
+int vhtml::Get_endTag(unsigned short int& str_point_index) {
+
+    for (unsigned int i = str_point_index; i < size; i++)
+    {
+        if (readBuffer[i] == '/' && readBuffer[i - 1] == '<') {
+            //e_startIndx == i - 1;
+            for (unsigned int j = i - 1; j < size; j++)
+            {
+                if (readBuffer[j] == '>') {
+                    return j;
+                }
+            }
+        }
+    }
+
+};
+int vhtml::Get_startTag(unsigned short int& str_point_index) {
+    for (unsigned int i = str_point_index; i > 0; i--) {
+        if (readBuffer[i] == '>') {
+            //s_startIndx == i;
+            for (unsigned int j = i; j > 0; j--) {
+                if (readBuffer[j] == '<') {
+                    return j;
+                }
+            }
+        }
+    }
+};
+
 
 void vhtml::html_size() {
     std::cout << size;
