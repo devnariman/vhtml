@@ -9,13 +9,18 @@ std::ostream& operator <<(std::ostream& out, const vhtml& html) {
 vhtml::vhtml(std::string url_point, std::string string_point)
 {
     url = url_point;
-    getHTML();
-    size = readBuffer.size();
-
-    if (string_point != "\0") {
-        found_element = vhtml_getElement(string_point);
+    get_constructor_res = getHTML();
+    if (get_constructor_res == 0)
+    {
+        size = 0;
     }
-
+    else
+    {
+        size = readBuffer.size();
+        if (string_point != "\0") {
+            found_element = vhtml_getElement(string_point);
+        }
+    }
 }
 std::string vhtml::get_element(std::string& string_point) {
     found_element = vhtml_getElement(string_point);
@@ -23,8 +28,11 @@ std::string vhtml::get_element(std::string& string_point) {
 }
 
 std::string vhtml::vhtml_getElement(std::string& str_point) {
+
+
     if (readBuffer.find(str_point) == std::string::npos) {
         std::cout << "It isnt hier !" << std::endl;
+        return "\0";
     }
     else
     {
@@ -81,7 +89,7 @@ size_t vhtml::WriteCallback(void* contents, size_t size, size_t nmemb, std::stri
     return newLength;
 }
 
-void vhtml::getHTML() {
+int vhtml::getHTML() {
     if (curl) {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
@@ -90,8 +98,7 @@ void vhtml::getHTML() {
         curl_easy_cleanup(curl);
 
         if (res != CURLE_OK) {
-            std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
-
+            return 0;
         }
     }
 }

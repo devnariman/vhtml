@@ -16,6 +16,7 @@ private:
 	std::string readBuffer;
 	std::string url;
 	short unsigned int size;
+	size_t get_constructor_res;
 	std::string found_element;
 	//*******************************
 	//*******************************
@@ -25,7 +26,7 @@ private:
 	std::string vhtml_getElement(std::string&);
 	int Get_endTag(unsigned short int&);
 	int Get_startTag(unsigned short int&);
-	void getHTML();
+	int getHTML();
 	static size_t WriteCallback(void*, size_t, size_t, std::string*);
 };
 
