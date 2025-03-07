@@ -1,4 +1,8 @@
 ﻿#include "vhtml.h"
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#pragma comment(lib, "ws2_32.lib")
+
 
 std::ostream& operator <<(std::ostream& out, const vhtml& html) {
     std::cout << html.readBuffer << std::endl;
@@ -13,10 +17,14 @@ vhtml::vhtml(std::string url_point, std::string string_point)
     if (get_constructor_res == 0)
     {
         size = 0;
+        found_element = "\0";
+        domain = "\0";
+        IP_numb = "\0";
     }
     else
     {
         size = readBuffer.size();
+        getIP();
         if (string_point != "\0") {
             found_element = vhtml_getElement(string_point);
         }
@@ -92,10 +100,11 @@ size_t vhtml::WriteCallback(void* contents, size_t size, size_t nmemb, std::stri
 int vhtml::getHTML() {
     if (curl) {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
         res = curl_easy_perform(curl);
-        curl_easy_cleanup(curl);
+        
 
         if (res != CURLE_OK) {
             return 0;
@@ -103,7 +112,58 @@ int vhtml::getHTML() {
     }
 }
 
+std::string IP(const std::string& domain) {
+    struct addrinfo hints, * res;
+    int err;
+    char ipstr[INET6_ADDRSTRLEN];
+
+    // آغاز اتصال به Winsock
+    WSADATA wsaData;
+    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+        std::cerr << "WSAStartup failed\n";
+        return "";
+    }
+
+    // تنظیمات برای جستجوی آدرس
+    ZeroMemory(&hints, sizeof(hints));
+    hints.ai_family = AF_INET;  // فقط IPv4
+    hints.ai_socktype = SOCK_STREAM;
+
+    // جستجوی آدرس دامنه
+    if ((err = getaddrinfo(domain.c_str(), NULL, &hints, &res)) != 0) {
+        std::cerr << "getaddrinfo failed: " << gai_strerror(err) << "\n";
+        WSACleanup();
+        return "";
+    }
+
+    // تبدیل آی‌پی به رشته
+    struct sockaddr_in* ipv4 = (struct sockaddr_in*)res->ai_addr;
+    inet_ntop(AF_INET, &ipv4->sin_addr, ipstr, sizeof(ipstr));
+
+    freeaddrinfo(res);
+    WSACleanup();
+    return std::string(ipstr);
+}
+std::string vhtml::get_domain_ip() {
+    return IP_numb;
+}
+
+
+void vhtml::getIP() {
+    std::string* temp_ptr = new std::string;
+    *temp_ptr = url.substr(url.find('/') + 2, 100);
+    int* e = new int;
+    *e = temp_ptr->find('/');
+    delete temp_ptr;
+    int* s = new int;
+    *s = url.find('/') + 2;
+    domain = url.substr(url.find('/') + 2 , (*e - *s)+*s);
+    delete s;
+    delete e;
+    IP_numb = IP(domain);
+}
+
 vhtml::~vhtml()
 {
-    // std::cout << "\nits good by" << std::endl;
+    curl_easy_cleanup(curl);
 }

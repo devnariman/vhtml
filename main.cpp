@@ -17,13 +17,18 @@ int main() {
 	cin.ignore();
 	vhtml html(url);
 
+	cout << html.get_domain_ip();
 
-	while (true)
-	{
-		menu(html);
-		cin.ignore();
-		clearScreen();
-	}
+
+	//while (true)
+	//{
+	//	menu(html);
+	//	cin.ignore();
+	//	clearScreen();
+	//}
+	// 
+	// 
+	// 
 	//cin.get();
 	//cin.ignore();
 	return 0;
