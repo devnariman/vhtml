@@ -28,6 +28,7 @@ vhtml::vhtml(std::string url_point, std::string string_point)
         class_name_maping();
         if (string_point != "\0") {
             found_element = vhtml_getElement(string_point);
+            std::cout << found_element << std::endl;
         }
     }
 }
