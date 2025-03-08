@@ -25,11 +25,55 @@ vhtml::vhtml(std::string url_point, std::string string_point)
     {
         size = readBuffer.size();
         getIP();
+        class_name_maping();
         if (string_point != "\0") {
             found_element = vhtml_getElement(string_point);
         }
     }
 }
+
+void vhtml::class_name_maping() {
+    
+    int s = 0;
+    int start = 0;
+    std::string temp;
+    int end;
+    std::string res;
+
+    for (size_t i = 0; i < size; i++)
+    {
+        if (i == 0) {
+            s = readBuffer.find("class=\"");
+            start = readBuffer.find("\"", s);
+            end = readBuffer.find("\"", start + 1);
+            //std::cout << readBuffer.substr(s , 1 + (end - s))  << std::endl;
+            res = readBuffer.substr(s, 1 + (end - s));
+            className_map[res] = readBuffer.find(res);
+            temp = readBuffer.substr(s+6);
+        }
+        else
+        {
+            s = temp.find("class=\"");
+            if (s == -1) { break; }
+            start = temp.find("\"" , s);
+            end = temp.find("\"", start + 1);
+            res = temp.substr(s, 1 + (end - s));
+            temp = temp.substr(s+6);
+            className_map[res] = readBuffer.find(res);
+        }
+    }
+
+    //std::cout << readBuffer[n+6] << std::endl;
+    //n = readBuffer.substr(n, 200).find("\"");
+    //std::cout << readBuffer.substr(n , 7) << std::endl;
+}   
+
+void vhtml::show_all_className() {
+    for (const auto& pair : className_map) {
+        std::cout << "Key: " << pair.first << ", Value: " << pair.second << std::endl;
+    }
+}
+
 std::string vhtml::get_element(std::string& string_point) {
     found_element = vhtml_getElement(string_point);
     return found_element;

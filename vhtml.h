@@ -1,12 +1,14 @@
 #pragma once
 #include <curl/curl.h>
 #include <iostream>
+#include <map>
 
 class vhtml
 {
 public:
 	vhtml(std::string url_point, std::string string_point = "\0");
 	void html_size();
+	void show_all_className();
 	std::string get_domain_ip();
 	std::string get_element(std::string&);
 	friend std::string IP(const std::string& domain);
@@ -23,6 +25,7 @@ private:
 	std::string IP_numb;
 	size_t get_constructor_res;
 	std::string found_element;
+	std::map <std::string , int> className_map;
 	//*******************************
 	//*******************************
 	//*******************************
@@ -33,6 +36,7 @@ private:
 	int Get_startTag(unsigned short int&);
 	int getHTML();
 	void getIP();
+	void class_name_maping();
 	static size_t WriteCallback(void*, size_t, size_t, std::string*);
 };
 

@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <vector>
 
+
 using namespace std;
 void menu(vhtml& html);
 void clearScreen();
@@ -16,8 +17,6 @@ int main() {
 	cout << "enter your url : "; cin >> url; cout << endl;
 	cin.ignore();
 	vhtml html(url);
-
-	cout << html.get_domain_ip();
 
 
 	//while (true)
