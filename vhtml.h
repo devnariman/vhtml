@@ -36,7 +36,7 @@ private:
 	int Get_startTag(unsigned short int&);
 	int getHTML();
 	void getIP();
-	void class_name_maping();
+	void classname_maping_First();
 	static size_t WriteCallback(void*, size_t, size_t, std::string*);
 };
 

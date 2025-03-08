@@ -25,7 +25,8 @@ vhtml::vhtml(std::string url_point, std::string string_point)
     {
         size = readBuffer.size();
         getIP();
-        class_name_maping();
+        classname_maping_First();
+
         if (string_point != "\0") {
             found_element = vhtml_getElement(string_point);
             std::cout << found_element << std::endl;
@@ -33,36 +34,44 @@ vhtml::vhtml(std::string url_point, std::string string_point)
     }
 }
 
-void vhtml::class_name_maping() {
+void vhtml::classname_maping_First() {
     
-    int s = 0;
-    int start = 0;
-    std::string temp;
-    int end;
-    std::string res;
+    int *s = new int;
+    *s = 0;
+    int* start = new int;
+    *start = 0;
+    std::string* temp = new std::string;
+    int* end = new int;
+    std::string* res = new std::string;
 
     for (size_t i = 0; i < size; i++)
     {
         if (i == 0) {
-            s = readBuffer.find("class=\"");
-            start = readBuffer.find("\"", s);
-            end = readBuffer.find("\"", start + 1);
+            *s = readBuffer.find("class=\"");
+            *start = readBuffer.find("\"", *s);
+            *end = readBuffer.find("\"", *start + 1);
             //std::cout << readBuffer.substr(s , 1 + (end - s))  << std::endl;
-            res = readBuffer.substr(s, 1 + (end - s));
-            className_map[res] = readBuffer.find(res);
-            temp = readBuffer.substr(s+6);
+            *res = readBuffer.substr(*s, 1 + (*end - *s));
+            className_map[*res] = readBuffer.find(*res);
+            *temp = readBuffer.substr(*s+6);
         }
         else
         {
-            s = temp.find("class=\"");
-            if (s == -1) { break; }
-            start = temp.find("\"" , s);
-            end = temp.find("\"", start + 1);
-            res = temp.substr(s, 1 + (end - s));
-            temp = temp.substr(s+6);
-            className_map[res] = readBuffer.find(res);
+            *s = temp->find("class=\"");
+            if (*s == -1) { break; }
+            *start = temp->find("\"" , *s);
+            *end = temp->find("\"", *start + 1);
+            *res = temp->substr(*s, 1 + (*end - *s));
+            *temp = temp->substr(*s+6);
+            className_map[*res] = readBuffer.find(*res);
         }
     }
+
+    delete s;
+    delete start;
+    delete temp;
+    delete end;
+    delete res;
 
     //std::cout << readBuffer[n+6] << std::endl;
     //n = readBuffer.substr(n, 200).find("\"");
@@ -189,6 +198,7 @@ std::string IP(const std::string& domain) {
     WSACleanup();
     return std::string(ipstr);
 }
+
 std::string vhtml::get_domain_ip() {
     return IP_numb;
 }
