@@ -25,7 +25,7 @@ vhtml::vhtml(std::string url_point, std::string string_point)
     {
         size = readBuffer.size();
         getIP();
-        classname_maping_First();
+        classname_maping_line();
 
         if (string_point != "\0") {
             found_element = vhtml_getElement(string_point);
@@ -34,7 +34,11 @@ vhtml::vhtml(std::string url_point, std::string string_point)
     }
 }
 
-void vhtml::classname_maping_First() {
+
+
+
+
+void vhtml::classname_maping_line() {
     
     int *s = new int;
     *s = 0;
@@ -52,7 +56,7 @@ void vhtml::classname_maping_First() {
             *end = readBuffer.find("\"", *start + 1);
             //std::cout << readBuffer.substr(s , 1 + (end - s))  << std::endl;
             *res = readBuffer.substr(*s, 1 + (*end - *s));
-            className_map[*res] = readBuffer.find(*res);
+            className_lineNumber_map[*res] = readBuffer.find(*res);
             *temp = readBuffer.substr(*s+6);
         }
         else
@@ -63,9 +67,10 @@ void vhtml::classname_maping_First() {
             *end = temp->find("\"", *start + 1);
             *res = temp->substr(*s, 1 + (*end - *s));
             *temp = temp->substr(*s+6);
-            className_map[*res] = readBuffer.find(*res);
+            className_lineNumber_map[*res] = readBuffer.find(*res);
         }
     }
+
 
     delete s;
     delete start;
@@ -73,14 +78,70 @@ void vhtml::classname_maping_First() {
     delete end;
     delete res;
 
-    //std::cout << readBuffer[n+6] << std::endl;
+
+
+   
+    
+    //std::cout << map_iter->second << std::endl;
+    static int n = 0;
+    int ckeck = 0;
+    int size_temp = className_lineNumber_map.size();
+    map_iter = className_lineNumber_map.begin();
+    std::string temp2;
+    while (true)
+    {
+        if (n != 0) {
+            for (int i = n; i > 0; i--)
+            {
+                //std::cout << readBuffer[i];
+                temp2 += readBuffer[i];
+                if (readBuffer[i] == '<') {
+                    break;
+                }
+            }
+            std::reverse(temp2.begin(), temp2.end());
+            for (int i = n+1; i < n+300; i++)
+            {
+                temp2.push_back(readBuffer[i]); 
+                if (readBuffer[i] == '>')
+                {
+                    break;
+                }
+            }
+            all_startelement_whit_class.push_back(temp2);
+            size_temp--;
+            if (size_temp == 0)
+            {
+                break;
+            }
+            map_iter++;
+            temp2.clear();
+            n = map_iter->second;
+        }
+        else
+        {
+            n = map_iter->second;
+        }
+    }
+    
+
+
+    
+    
     //n = readBuffer.substr(n, 200).find("\"");
     //std::cout << readBuffer.substr(n , 7) << std::endl;
 }   
 
+void vhtml::show_all_className_tagElement() {
+    for (vector_element_whit_class_iter = all_startelement_whit_class.begin(); vector_element_whit_class_iter != all_startelement_whit_class.end(); ++vector_element_whit_class_iter) {
+        std::cout << *vector_element_whit_class_iter << std::endl;
+    }
+    std::cout <<"size : " <<  all_startelement_whit_class.size() << std::endl;
+};
+
 void vhtml::show_all_className() {
-    for (const auto& pair : className_map) {
-        std::cout << "Key: " << pair.first << ", Value: " << pair.second << std::endl;
+    for (map_iter = className_lineNumber_map.begin(); map_iter != className_lineNumber_map.end(); ++map_iter) {
+        std::cout << map_iter->first << std::endl;
     }
 }
 

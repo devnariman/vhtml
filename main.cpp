@@ -15,12 +15,12 @@ int main() {
 
 	string url;
 	bool check;
-	url = "https://www.tpointtech.com/features-of-java";
-	//cout << "enter your url : "; cin >> url; cout << endl;
-	//cin.ignore();
+	//url = "https://www.tpointtech.com/features-of-java";
+	cout << "enter your url : "; cin >> url; cout << endl;
+	cin.ignore();
 	vhtml html(url);
 
-
+	
 	while (true)
 	{
 		if (menu(html) == true) {
@@ -33,6 +33,10 @@ int main() {
 			break;
 		};
 	}
+
+	
+	
+
 	return 0;
 }
 //.
@@ -52,6 +56,7 @@ bool menu(vhtml& html) {
 	cout << "3 - search vhtml" << endl;
 	cout << "4 - vhtml map " << endl;
 	cout << "5 - vhtml domain IP " << endl;
+	cout << "6 - vhtml All Start Element from className " << endl;
 	cout << "Enter your controler number : "; cin >> controler_number; cout << endl;
 	cin.ignore();
 	string base;
@@ -90,6 +95,10 @@ bool menu(vhtml& html) {
 		clearScreen();
 		cout << "vhtml IP :  >>>>>>>> ";
 		cout << html.get_domain_ip() << endl;
+		break;
+	case 6:
+		cout << "vhtml All Start Element from className :  >>>>>>>> ";
+		html.show_all_className_tagElement();
 		break;
 	case 2256:
 		return false;
