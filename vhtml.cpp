@@ -37,6 +37,11 @@ vhtml::vhtml(std::string url_point, std::string string_point)
 void vhtml::Get_by_className(std::string& className) {
 
     std::cout << className << std::endl;
+    
+    
+
+
+
 
 }
 

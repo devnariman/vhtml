@@ -79,7 +79,7 @@ bool menu(vhtml& html) {
         break;
     case 3:
         clearScreen();
-        cout << "search in HTML , enter your str :  >>>>>>>> ";
+        cout << "search in HTML , enter your str :  >>>>>>>> "; // 7 va 3
         while (true) {
             cin.get(*temp);  // خواندن یک کاراکتر
             if (*temp == '\n') {  // اگر به انتهای خط رسیدیم
@@ -97,16 +97,16 @@ bool menu(vhtml& html) {
         break;
     case 5:
         clearScreen();
-        cout << "vhtml IP :  >>>>>>>> ";
+        cout << "vhtml IP :  >>>>>>>> " << endl;
         cout << html.get_domain_ip() << endl;
         break;
     case 6:
-        cout << "vhtml All Start Element from className :  >>>>>>>> ";
+        cout << "vhtml All Start Element from className :  >>>>>>>> " << endl;
         html.show_all_className_tagElement();
         break;
     case 7:
         clearScreen();
-        cout << "search in HTML by class name, enter your classname target :  >>>>>>>> ";
+        cout << "search in HTML by class name, enter your classname target :  >>>>>>>> "; // 3 va 7
         while (true) {
             cin.get(*temp);  // خواندن یک کاراکتر
             if (*temp == '\n') {  // اگر به انتهای خط رسیدیم
