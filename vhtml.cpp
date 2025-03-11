@@ -25,13 +25,19 @@ vhtml::vhtml(std::string url_point, std::string string_point)
     {
         size = readBuffer.size();
         getIP();
-        classname_maping_line();
+        classname_maping_line();\
 
         if (string_point != "\0") {
             found_element = vhtml_getElement(string_point);
             std::cout << found_element << std::endl;
         }
     }
+}
+
+void vhtml::Get_by_className(std::string& className) {
+
+    std::cout << className << std::endl;
+
 }
 
 
@@ -124,12 +130,8 @@ void vhtml::classname_maping_line() {
         }
     }
     
-
-
-    
-    
-    //n = readBuffer.substr(n, 200).find("\"");
-    //std::cout << readBuffer.substr(n , 7) << std::endl;
+    // n = readBuffer.substr(n, 200).find("\"");
+    // std::cout << readBuffer.substr(n , 7) << std::endl;
 }   
 
 void vhtml::show_all_className_tagElement() {

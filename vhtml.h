@@ -14,6 +14,7 @@ public:
 	std::string get_domain_ip();
 	void show_all_className_tagElement();
 	std::string get_element(std::string&);
+	void Get_by_className(std::string&);
 	friend std::string IP(const std::string& domain);
 	friend std::ostream& operator <<(std::ostream& out, const vhtml& html);
 	~vhtml();
