@@ -16,11 +16,12 @@ int main() {
 
 	string url;
 	bool check;
-	url = "https://www.tpointtech.com/features-of-java";
+	url = "https://soft98.ir/";
 	//cout << "enter your url : "; cin >> url; cout << endl;
 	//cin.ignore();
 	vhtml html(url);
-
+    
+   
 
 	
 	while (true)
@@ -35,7 +36,7 @@ int main() {
 			break;
 		};
 	}
-
+    
 	
 	
 
@@ -62,6 +63,20 @@ bool menu(vhtml& html) {
     cout << "7 - search in vhtml by class name " << endl;
     cout << "Enter your controler number : "; cin >> controler_number; cout << endl;
     cin.ignore();
+
+    /*
+    if (controler_number != 1,
+        controler_number != 2,
+        controler_number != 3,
+        controler_number != 4,
+        controler_number != 5,
+        controler_number != 6 ,
+        controler_number != 7)
+    {
+        cout << "your number not defined ! " << endl;
+        return true;
+    }
+    */
 
     auto base = std::make_unique<std::string>(); // استفاده از unique_ptr به جای new
     auto temp = std::make_unique<char>();       // استفاده از unique_ptr به جای new
@@ -120,7 +135,6 @@ bool menu(vhtml& html) {
     case 2256:
         return false;
     default:
-        cout << "your controler number not declering !" << endl;
         break;
     }
     return true;

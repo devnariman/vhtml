@@ -29,6 +29,7 @@ private:
 	std::string IP_numb;
 	size_t get_constructor_res;
 	std::string found_element;
+	std::vector <std::string>::iterator vector_pub_iter;
 	std::map <std::string, int>::iterator map_iter;
 	std::map <std::string , int> className_lineNumber_map;
 	std::vector <std::string> all_startelement_whit_class;

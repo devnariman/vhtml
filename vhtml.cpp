@@ -20,6 +20,7 @@ vhtml::vhtml(std::string url_point, std::string string_point)
         found_element = "\0";
         domain = "\0";
         IP_numb = "\0";
+        std::cout << "not connected !" << std::endl;
     }
     else
     {
@@ -36,13 +37,43 @@ vhtml::vhtml(std::string url_point, std::string string_point)
 
 void vhtml::Get_by_className(std::string& className) {
 
-    std::cout << className << std::endl;
-    
-    
+    std::string* temp = new std::string;
+    std::string* temp_tagName = new std::string;
+    size_t index_target = 0;
 
+    for (vector_pub_iter = all_startelement_whit_class.begin(); vector_pub_iter !=all_startelement_whit_class.end(); ++vector_pub_iter)
+    {
+        *temp = *vector_pub_iter;
+        /*
+        
+        bayad khod mohtava class moghayese beshe !
+        
+        */
+        if (temp->find(className) != -1) {
+            
+            temp->assign(all_startelement_whit_class[index_target]);
+            *temp_tagName = temp->substr(temp->find("<"), temp->find(" "));
+            temp_tagName->push_back('>');
+            temp_tagName->replace(0 , 1 , "</");
 
+            //std::cout << *temp << std::endl;
+            index_target = readBuffer.find(*temp);
+            temp->assign(readBuffer.substr(readBuffer.find(*temp) , ( readBuffer.find(*temp_tagName, index_target) - readBuffer.find(*temp) ) + temp_tagName->length()));
 
+            
+            std::cout <<  *temp << std::endl;
+            break;
 
+        }
+        else
+        {
+            index_target++;
+            continue;
+        }
+    }
+
+    delete temp_tagName;
+    delete temp;
 }
 
 
