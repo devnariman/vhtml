@@ -16,18 +16,28 @@ vhtml::vhtml(std::string url_point, std::string string_point)
     get_constructor_res = getHTML();
     if (get_constructor_res == 0)
     {
+        availability = false;
         size = 0;
         found_element = "\0";
         domain = "\0";
         IP_numb = "\0";
-        std::cout << "not connected !" << std::endl;
+        std::cout << "-> (vhtml) cant Get your target webPage !" << std::endl;
+    }
+    else if(isInternetConnected() == false)
+    {
+        availability = false;
+        size = 0;
+        found_element = "\0";
+        domain = "\0";
+        IP_numb = "\0";
+        std::cout << "-> (vhtml) not connected to internet !" << std::endl;
     }
     else
     {
+        availability = true;
         size = readBuffer.size();
         getIP();
-        classname_maping_line();\
-
+        classname_maping_line();
         if (string_point != "\0") {
             found_element = vhtml_getElement(string_point);
             std::cout << found_element << std::endl;
@@ -35,151 +45,208 @@ vhtml::vhtml(std::string url_point, std::string string_point)
     }
 }
 
+
+std::string vhtml::GetElement_by_className(std::string className) {
+
+    Get_by_className(className);
+    return className;
+
+}
+
 void vhtml::Get_by_className(std::string& className) {
-
-    std::string* temp = new std::string;
-    std::string* temp_tagName = new std::string;
-    size_t index_target = 0;
-
-    for (vector_pub_iter = all_startelement_whit_class.begin(); vector_pub_iter !=all_startelement_whit_class.end(); ++vector_pub_iter)
+    if (availability == true)
     {
-        *temp = *vector_pub_iter;
-        /*
-        
-        bayad khod mohtava class moghayese beshe !
-        
-        */
-        if (temp->find(className) != -1) {
-            
-            temp->assign(all_startelement_whit_class[index_target]);
-            *temp_tagName = temp->substr(temp->find("<"), temp->find(" "));
-            temp_tagName->push_back('>');
-            temp_tagName->replace(0 , 1 , "</");
 
-            //std::cout << *temp << std::endl;
-            index_target = readBuffer.find(*temp);
-            temp->assign(readBuffer.substr(readBuffer.find(*temp) , ( readBuffer.find(*temp_tagName, index_target) - readBuffer.find(*temp) ) + temp_tagName->length()));
+        std::string* temp = new std::string;
+        std::string* temp_tagName = new std::string;
+        size_t index_target = 0;
 
-            
-            std::cout <<  *temp << std::endl;
-            break;
-
-        }
-        else
+        for (map_iter = className_lineNumber_map.begin(); map_iter != className_lineNumber_map.end(); ++map_iter)
         {
-            index_target++;
-            continue;
-        }
-    }
+            *temp = map_iter->first;
+            *temp = temp->substr(temp->find('\"') + 1);
+            *temp = temp->substr(0, temp->length() - 1);
 
-    delete temp_tagName;
-    delete temp;
+            if (*temp == className) {
+
+                temp->assign(all_startelement_whit_class[index_target]);
+                *temp_tagName = temp->substr(temp->find("<"), temp->find(" "));
+                temp_tagName->push_back('>');
+                temp_tagName->replace(0, 1, "</");
+
+                //std::cout << *temp << std::endl;
+                index_target = readBuffer.find(*temp);
+                temp->assign(readBuffer.substr(readBuffer.find(*temp), (readBuffer.find(*temp_tagName, index_target) - readBuffer.find(*temp)) + temp_tagName->length()));
+
+
+                className.assign(*temp);
+                break;
+            }
+            else
+            {
+                index_target++;
+                continue;
+            }
+
+        }
+
+        delete temp_tagName;
+        delete temp;
+    }
+    else
+    {
+        className = "we have some problem ! ";
+        std::cout << "we have some problem ! " << std::endl;
+    }
 }
 
 
 
+bool vhtml::isInternetConnected() {
+
+    SOCKET sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+        if (sock == INVALID_SOCKET) {
+            std::cerr << "Socket creation failed.\n";
+                WSACleanup();
+                return false;
+        }
+
+    sockaddr_in server;
+    server.sin_family = AF_INET;
+    server.sin_port = htons(80); // پورت 80 برای HTTP
+    inet_pton(AF_INET, "142.250.185.206", &server.sin_addr); // آیپی گوگل
+
+    // تلاش برای اتصال به سرور
+    if (connect(sock, (sockaddr*)&server, sizeof(server)) == SOCKET_ERROR) {
+        closesocket(sock);
+        WSACleanup();
+        return false; // اتصال ناموفق
+    }
+
+    closesocket(sock);
+    WSACleanup();
+    return true; // اتصال موفق
+}
 
 
 void vhtml::classname_maping_line() {
-    
-    int *s = new int;
-    *s = 0;
-    int* start = new int;
-    *start = 0;
-    std::string* temp = new std::string;
-    int* end = new int;
-    std::string* res = new std::string;
-
-    for (size_t i = 0; i < size; i++)
+    if (availability == true)
     {
-        if (i == 0) {
-            *s = readBuffer.find("class=\"");
-            *start = readBuffer.find("\"", *s);
-            *end = readBuffer.find("\"", *start + 1);
-            //std::cout << readBuffer.substr(s , 1 + (end - s))  << std::endl;
-            *res = readBuffer.substr(*s, 1 + (*end - *s));
-            className_lineNumber_map[*res] = readBuffer.find(*res);
-            *temp = readBuffer.substr(*s+6);
-        }
-        else
+
+        int* s = new int;
+        *s = 0;
+        int* start = new int;
+        *start = 0;
+        std::string* temp = new std::string;
+        int* end = new int;
+        std::string* res = new std::string;
+
+        for (size_t i = 0; i < size; i++)
         {
-            *s = temp->find("class=\"");
-            if (*s == -1) { break; }
-            *start = temp->find("\"" , *s);
-            *end = temp->find("\"", *start + 1);
-            *res = temp->substr(*s, 1 + (*end - *s));
-            *temp = temp->substr(*s+6);
-            className_lineNumber_map[*res] = readBuffer.find(*res);
-        }
-    }
-
-
-    delete s;
-    delete start;
-    delete temp;
-    delete end;
-    delete res;
-
-
-
-   
-    
-    //std::cout << map_iter->second << std::endl;
-    static int n = 0;
-    int ckeck = 0;
-    int size_temp = className_lineNumber_map.size();
-    map_iter = className_lineNumber_map.begin();
-    std::string temp2;
-    while (true)
-    {
-        if (n != 0) {
-            for (int i = n; i > 0; i--)
-            {
-                //std::cout << readBuffer[i];
-                temp2 += readBuffer[i];
-                if (readBuffer[i] == '<') {
-                    break;
-                }
+            if (i == 0) {
+                *s = readBuffer.find("class=\"");
+                *start = readBuffer.find("\"", *s);
+                *end = readBuffer.find("\"", *start + 1);
+                //std::cout << readBuffer.substr(s , 1 + (end - s))  << std::endl;
+                *res = readBuffer.substr(*s, 1 + (*end - *s));
+                className_lineNumber_map[*res] = readBuffer.find(*res);
+                *temp = readBuffer.substr(*s + 6);
             }
-            std::reverse(temp2.begin(), temp2.end());
-            for (int i = n+1; i < n+300; i++)
+            else
             {
-                temp2.push_back(readBuffer[i]); 
-                if (readBuffer[i] == '>')
+                *s = temp->find("class=\"");
+                if (*s == -1) { break; }
+                *start = temp->find("\"", *s);
+                *end = temp->find("\"", *start + 1);
+                *res = temp->substr(*s, 1 + (*end - *s));
+                *temp = temp->substr(*s + 6);
+                className_lineNumber_map[*res] = readBuffer.find(*res);
+            }
+        }
+
+
+        delete s;
+        delete start;
+        delete temp;
+        delete end;
+        delete res;
+
+
+
+
+
+        //std::cout << map_iter->second << std::endl;
+        static int n = 0;
+        int ckeck = 0;
+        int size_temp = className_lineNumber_map.size();
+        map_iter = className_lineNumber_map.begin();
+        std::string temp2;
+        while (true)
+        {
+            if (n != 0) {
+                for (int i = n; i > 0; i--)
+                {
+                    //std::cout << readBuffer[i];
+                    temp2 += readBuffer[i];
+                    if (readBuffer[i] == '<') {
+                        break;
+                    }
+                }
+                std::reverse(temp2.begin(), temp2.end());
+                for (int i = n + 1; i < n + 300; i++)
+                {
+                    temp2.push_back(readBuffer[i]);
+                    if (readBuffer[i] == '>')
+                    {
+                        break;
+                    }
+                }
+                all_startelement_whit_class.push_back(temp2);
+                size_temp--;
+                if (size_temp == 0)
                 {
                     break;
                 }
+                map_iter++;
+                temp2.clear();
+                n = map_iter->second;
             }
-            all_startelement_whit_class.push_back(temp2);
-            size_temp--;
-            if (size_temp == 0)
+            else
             {
-                break;
+                n = map_iter->second;
             }
-            map_iter++;
-            temp2.clear();
-            n = map_iter->second;
-        }
-        else
-        {
-            n = map_iter->second;
         }
     }
-    
+    else
+    {
+        std::cout << "we have some problem ! " << std::endl;
+    }
     // n = readBuffer.substr(n, 200).find("\"");
     // std::cout << readBuffer.substr(n , 7) << std::endl;
 }   
 
 void vhtml::show_all_className_tagElement() {
-    for (vector_element_whit_class_iter = all_startelement_whit_class.begin(); vector_element_whit_class_iter != all_startelement_whit_class.end(); ++vector_element_whit_class_iter) {
-        std::cout << *vector_element_whit_class_iter << std::endl;
+    if (availability == true) {
+        for (vector_element_whit_class_iter = all_startelement_whit_class.begin(); vector_element_whit_class_iter != all_startelement_whit_class.end(); ++vector_element_whit_class_iter) {
+            std::cout << *vector_element_whit_class_iter << std::endl;
+        }
+        std::cout << "size : " << all_startelement_whit_class.size() << std::endl;
     }
-    std::cout <<"size : " <<  all_startelement_whit_class.size() << std::endl;
+    else
+    {
+        std::cout << "we have some problem ! " << std::endl;
+    }
 };
 
 void vhtml::show_all_className() {
-    for (map_iter = className_lineNumber_map.begin(); map_iter != className_lineNumber_map.end(); ++map_iter) {
-        std::cout << map_iter->first << std::endl;
+    if (availability == true){
+        for (map_iter = className_lineNumber_map.begin(); map_iter != className_lineNumber_map.end(); ++map_iter) {
+            std::cout << map_iter->first << std::endl;
+        }
+    }
+    else
+    {
+        std::cout << "we have some problem ! " << std::endl;
     }
 }
 
@@ -189,21 +256,27 @@ std::string vhtml::get_element(std::string& string_point) {
 }
 
 std::string vhtml::vhtml_getElement(std::string& str_point) {
-
-
-    if (readBuffer.find(str_point) == std::string::npos) {
-        std::cout << "It isnt hier !" << std::endl;
-        return "\0";
-    }
-    else
+    if (availability == true)
     {
-        unsigned short int str_point_index = this->readBuffer.find(str_point);
-        int end_tag , start_tag;
-        end_tag = Get_endTag(str_point_index);
-        start_tag = Get_startTag(str_point_index);
-        return readBuffer.substr(start_tag, (end_tag - start_tag)+1);
+
+        if (readBuffer.find(str_point) == std::string::npos) {
+            std::cout << "It isnt hier !" << std::endl;
+            return "\0";
+        }
+        else
+        {
+            unsigned short int str_point_index = this->readBuffer.find(str_point);
+            int end_tag, start_tag;
+            end_tag = Get_endTag(str_point_index);
+            start_tag = Get_startTag(str_point_index);
+            return readBuffer.substr(start_tag, (end_tag - start_tag) + 1);
+        }
     }
-   
+    else 
+    {
+        std::cout << "we have some problem ! " << std::endl;
+        return "we have some problem ! ";
+    }
 };
 int vhtml::Get_endTag(unsigned short int& str_point_index) {
 
@@ -236,7 +309,13 @@ int vhtml::Get_startTag(unsigned short int& str_point_index) {
 
 
 void vhtml::html_size() {
-    std::cout << size;
+    if (availability == true) {
+        std::cout << size;
+    }
+    else
+    {
+        std::cout << "we have some problem ! " << std::endl;
+    }
 };
 
 size_t vhtml::WriteCallback(void* contents, size_t size, size_t nmemb, std::string* s) {
@@ -262,7 +341,12 @@ int vhtml::getHTML() {
         if (res != CURLE_OK) {
             return 0;
         }
+        else
+        {
+            return 1;
+        }
     }
+
 }
 
 std::string IP(const std::string& domain) {
@@ -299,24 +383,38 @@ std::string IP(const std::string& domain) {
 }
 
 std::string vhtml::get_domain_ip() {
-    return IP_numb;
+    if (availability == true) {
+        return IP_numb;
+    }
+    else
+    {
+        return "-> (vhtml) not connected to internet !";
+    }
 }
 
 
 void vhtml::getIP() {
-    std::string* temp_ptr = new std::string;
-    *temp_ptr = url.substr(url.find('/') + 2, 100);
-    int* e = new int;
-    *e = temp_ptr->find('/');
-    delete temp_ptr;
-    int* s = new int;
-    *s = url.find('/') + 2;
-    domain = url.substr(url.find('/') + 2 , (*e - *s)+*s);
-    delete s;
-    delete e;
-    IP_numb = IP(domain);
+    if (availability == true) 
+    {
+        std::string* temp_ptr = new std::string;
+        *temp_ptr = url.substr(url.find('/') + 2, 100);
+        int* e = new int;
+        *e = temp_ptr->find('/');
+        delete temp_ptr;
+        int* s = new int;
+        *s = url.find('/') + 2;
+        domain = url.substr(url.find('/') + 2, (*e - *s) + *s);
+        delete s;
+        delete e;
+        IP_numb = IP(domain); 
+    }
+    else
+    {
+        std::cout << "we have some problem ! " << std::endl;
+    }
+    
 }
-
+bool vhtml::availability_status() { return availability; }
 vhtml::~vhtml()
 {
     curl_easy_cleanup(curl);

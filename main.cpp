@@ -16,7 +16,7 @@ int main() {
 
 	string url;
 	bool check;
-	url = "https://soft98.ir/";
+	url = "https://vgdl.ir/";
 	//cout << "enter your url : "; cin >> url; cout << endl;
 	//cin.ignore();
 	vhtml html(url);
@@ -26,15 +26,24 @@ int main() {
 	
 	while (true)
 	{
-		if (menu(html) == true) {
-			cin.ignore();
-			clearScreen();
-		}
-		else
-		{
-			clearScreen();
-			break;
-		};
+		
+        if(html.availability_status() == false) 
+        {
+            break;
+        }
+        else
+        {
+            if (menu(html) == true)
+            {
+                cin.ignore();
+                clearScreen();
+            }
+            else
+            {
+                clearScreen();
+                break;
+            };
+        }
 	}
     
 	
@@ -130,7 +139,7 @@ bool menu(vhtml& html) {
             char_count++;
             base->push_back(*temp);  // اضافه کردن کاراکتر به string
         }
-        html.Get_by_className(*base);
+        cout << html.GetElement_by_className(*base) << endl;
         break;
     case 2256:
         return false;
